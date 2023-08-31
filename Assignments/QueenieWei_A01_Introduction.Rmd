@@ -50,7 +50,7 @@ I am confident I will be patient enough to learn to code.
 3. Are there any components of the course about which you feel apprehensive?
 
 > Answer: 
-I feel nervous about the stats since I never really understood it.
+I feel nervous about components that include statistics since I never really understood it.
 
 
 ## 3) GitHub
