@@ -9,7 +9,7 @@ output: pdf_document
 
 1.  Discuss the benefits and approach for reproducible data analysis
 2.  Perform simple operations using R coding syntax
-3.  Call and create functions in R
+3.  Call and create functions in R 
 
 ## Reproducible Data Analysis
 
@@ -80,7 +80,7 @@ Below is a chunk of R code. You can run R code in several ways:
 5 + 2 * 3
 (5 + 2) * 3
 
-# Common terms
+ # Common terms
 sqrt(25)
 sin(3)
 pi
