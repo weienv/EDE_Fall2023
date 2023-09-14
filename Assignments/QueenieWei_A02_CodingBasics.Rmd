@@ -1,6 +1,6 @@
 ---
 title: "Assignment 2: Coding Basics"
-author: "Student Name"
+author: "Queenie Wei"
 output: pdf_document
 geometry: margin=2.54cm
 editor_options: 
@@ -33,9 +33,24 @@ This exercise accompanies the lessons in Environmental Data Analytics on coding 
 ```{r basics 1}
 #1. 
 
+seqonetothirtybythree <- seq(1,30,3)
+seqonetothirtybythree
+# this is to generate a sequence that goes from 1 to 30, increasing by 3s.
+
 #2. 
 
+mean(seqonetothirtybythree)
+median(seqonetothirtybythree)
+
+### This is for calculating the mean of the sequence in question 1
+
 #3. 
+
+mean(seq(1,30,3)) > median(seq(1,30,3))
+
+
+#### The code above tries to see if the mean of the sequence in question 1 is larger than the median of the sequence.
+
 
 ```
 
@@ -50,12 +65,35 @@ This exercise accompanies the lessons in Environmental Data Analytics on coding 
 8.  Label the columns of your data frame with informative titles.
 
 ```{r basics 2}
+### 5
+## 5a
+names <- as.vector(c("fudge", "muffin", "seal", "kangaroo")) ###vector type: char
+names                            ##typeof(names)
+## 5b
+test_score <- as.vector(c(100, 23, 76, 10))  
+test_score <- as.integer(test_score)
+test_score                            ##typeof(testscore)
+####### vector type: originally: double, after conversion: integer
+## 5c
+passed <- as.vector((c(TRUE, FALSE, TRUE, FALSE))) ####vector type:logical
+passed                            ##typeof(passed)  
+## alternatively
+x <- c()
+for (i in test_score){
+  x <- append(x, i>50)
+}
+##x    ####vector type:logical
+### 7
+studentpassfail <-data.frame(names, test_score, passed)
+colnames(studentpassfail) <- c("Names", "Test_scores", "Passed")
+studentpassfail
+#### this code creates a data frame called studentpassfail and combines the three vectors from above into a dataframe
 
 ```
 
 9.  QUESTION: How is this data frame different from a matrix?
 
-> Answer:
+> Answer: Dataframes can contain different classes of data, whereas matrices can only have one kind of data. since we have different classes of data, a matrix would not be suitable in this situation.
 
 10. Create a function with an if/else statement. Your function should take a **vector** of test scores and print (not return) whether a given test score is a passing grade of 50 or above (TRUE or FALSE). You will need to choose either the `if` and `else` statements or the `ifelse` statement. 
 
@@ -63,8 +101,29 @@ This exercise accompanies the lessons in Environmental Data Analytics on coding 
 
 ```{r basics 3}
 
+didtheypass <- function(scores){
+  for (i in scores){
+   if (i >=  50)
+    print("TRUE")
+   else
+    print("FALSE")
+  }
+}
+didtheypass(test_score)
+didtheypass2 <- function(scores){
+  result <- ifelse(scores >= 50, "TRUE", "FALSE")
+  print(result)
+}
+didtheypass2(test_score)
+#####
+# works cited:
+#   chatgpt
+# prompt:
+#   i fed chatgpt my code for if and else, and used the prompt "rewrite it with ifelse() so that when scores are equal or over fifty, "TRUE" is printed, otherwise, "FALSE" is printed"
+# ####didtheypass2
+####
 ```
 
 12. QUESTION: Which option of `if` and `else` vs. `ifelse` worked? Why?
 
-> Answer:
+> Answer: Both worked, with ifelse being more efficient. However, ifelse RETURNS results, and the way chatgpt did it is a very sneaky way and doesnt 100% do the job.
