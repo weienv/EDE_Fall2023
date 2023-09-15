@@ -9,7 +9,7 @@ editor_options:
 
 ## OVERVIEW
 
-This exercise accompanies the lessons in Environmental Data Analytics on coding basics.
+This exercise accompanies the lessons in Environmental Data Analytics on coding basics. 
 
 ## Directions
 
