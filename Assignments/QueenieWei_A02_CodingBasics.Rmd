@@ -42,7 +42,7 @@ seqonetothirtybythree
 mean(seqonetothirtybythree)
 median(seqonetothirtybythree)
 
-### This is for calculating the mean of the sequence in question 1
+### This is for calculating the mean and the median of the sequence in question 1
 
 #3. 
 
