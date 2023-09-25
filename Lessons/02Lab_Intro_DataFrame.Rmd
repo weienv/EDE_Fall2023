@@ -4,6 +4,8 @@ subtitle: "Environmental Data Analytics"
 author: "Luana Lima"
 date: "Fall 2023"
 output: pdf_document
+editor_options: 
+  chunk_output_type: console
 ---
 
 ```{r setup, include=FALSE}
@@ -21,7 +23,9 @@ When we import data to R, data frame is the preferred way for storing the data b
 Let's look into a built-in data frame from package "datasets" - cars. The data give the speed of cars and the distances taken to stop.
 
 ```{r cars}
+mtcars
 cars
+###mtcars is another one
 ```
 
 Note that it has 2 columns and 50 rows.
@@ -32,6 +36,7 @@ Suppose you want just the column speed. How would you access that data?
 
 ```{r}
 cars$speed
+mtcars$cyl
 ```
 
 How would you store it on another object?
@@ -51,12 +56,15 @@ class(car_speed)
 
 #Option 2
 is.data.frame(car_speed)
+
+is.vector(car_speed)
 ```
 
 How could you make it a data frame?
 
 ```{r}
 df_car_speed <- as.data.frame(car_speed)
+#### converting the vector into a data frame
 df_car_speed
 class(df_car_speed)
 ```
@@ -67,15 +75,17 @@ How could you add columns to *df_car_speed*?
 
 ```{r}
 car_dist <- cars$dist
-
 #Option 1
 df <- cbind(df_car_speed,car_dist)  #similarly rows could be added using rbind()
+#only dataframes will be created
 class(df)
 df
 
 #Or Option 2 - transform into a data frame before binding
 df_car_dist <- as.data.frame(car_dist)  #op2
 df_opt2 <- cbind(df_car_speed,df_car_dist)
+######cbind: Take a sequence of vector, matrix or data-frame arguments and combine by columns or rows, respectively.
+?cbind
 class(df_opt2)
 df_opt2
 
@@ -95,6 +105,7 @@ How would you create a data frame?
 ```{r}
 #useful function data.frame()
 create_df <- data.frame("speed"=car_speed,"dist"=car_dist)
+#data.frame is for creating a new dataframe
 create_df
 ```
 
@@ -106,13 +117,21 @@ Some useful functions to use with data frames.
 ncol(df)  
 nrow(df)  
 length(df)  #same as ncol
-summary(df)
+summary(df) # great for seeing whats going on
 head(df) #show the first 6 rows of df
+head(df,50)
 
 #If you know the number of the column you want you can refer to that to access column
 df[,1]
-
+#matrix notation: [,1] 
+##[rows, columns], if nothing, gives everything
+df[1,]
+df[1:10,2] #slice
+df[c(1,2,3),] ###?? what does this do?
+## getting everything from row 1 2 3. c is to combine row 1 2 3
+df2 <- df[c(2,1,3),]$car_speed
 #you could also use this notation to delete columns
+
 df <- df[,-2]
 df
 ```
