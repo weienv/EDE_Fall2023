@@ -157,7 +157,7 @@ labs, and a lot less in field natural environments over time. In addition, there
 is a dropoff in all kinds of experiments around 2020, which may be attributed 
 to the corona virus. There used to be more experiments in natural sites than lab
 sites, but with the advancement of technology, it is easier to control for 
-different factors in labs, making it more favorable.
+different factors in labs, making it more favorable. 
 
 11. Create a bar graph of Endpoint counts. What are the two most common end points, and how are they defined? Consult the ECOTOX_CodeAppendix for more information. 
 
