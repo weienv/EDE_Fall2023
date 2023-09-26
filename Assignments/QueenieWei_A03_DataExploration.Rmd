@@ -78,7 +78,7 @@ and helps with the strucuture and roughness of the habitat.
 
 ## Obtain basic summaries of your data (Neonics)
 
-5.  What are the dimensions of the dataset?
+5.  What are the dimensions of the dataset?  
 
 ```{r}
 #checking the dimensions of the two datasets
