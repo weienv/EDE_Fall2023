@@ -32,10 +32,10 @@ The completed exercise is due on Thursday, Sept 28th @ 5:00pm.
 
 ```{r setup, message = FALSE}
 #1a 
+#install.packages("here")
 library(tidyverse)
 library(lubridate)
 library(dplyr)
-install.packages("here")
 library(here)
 library(tidyr)
 
