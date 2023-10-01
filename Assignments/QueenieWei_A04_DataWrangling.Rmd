@@ -1,6 +1,6 @@
 ---
 title: "Assignment 4: Data Wrangling"
-author: "Student Name"
+author: "Queenie Wei"
 output: pdf_document
 geometry: margin=2.54cm
 ---
@@ -32,9 +32,13 @@ The completed exercise is due on Thursday, Sept 28th @ 5:00pm.
 
 ```{r setup, message = FALSE}
 #1a 
+library(tidyverse)
+library(lubridate)
+install.packages("here")
+library(here)
 
 #1b 
-
+getwd()
 #1c 
 
 #2 
