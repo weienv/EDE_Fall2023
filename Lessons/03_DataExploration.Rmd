@@ -17,13 +17,15 @@ In this course, we will always open the R project file for the course, and addit
 # Working directory should be set to the base folder for the Environmental Data Analytics Course repository, i.e., the folder that houses the R Project file.
 
 getwd()
+# shows where the working diretory is
 ```
 
 If your working directory is not set to the folder you want, you have several options. The first is to directly code your working directory. You may do this by defining an absolute file path (below). What are the pitfalls of using an absolute file path?
 
 ```{r Setting the working directory }
 # Absolute file path is commented out
-# setwd("/home/guest/EDE_Fall2023")
+setwd("/Users/ziyaw/Downloads/EDE_Fall2023")
+###setting working directory
 ```
 
 You may change your working directory without coding by going to the Session menu in RStudio and navigating to the Set Working Directory tab. From there, you may select from a series of options to reset your working directory. 
@@ -51,15 +53,15 @@ If a package is already installed, you will need to load it every session. You c
 
 ```{r Installing and loading packages}
 # We will use the packages dplyr and ggplot2 regularly. 
-#install.packages("dplyr") 
-#install.packages("ggplot2")
+install.packages("dplyr") 
+install.packages("ggplot2")
 # comment out install commands, use only when needed and re-comment
 
 library(dplyr)
 library(ggplot2)
 
 # Some packages are umbrellas under which other packages are loaded
-#install.packages("tidyverse")
+install.packages("tidyverse")
 library(tidyverse)
 ```
 
@@ -87,13 +89,14 @@ Commons functions to import datasets and store as data frames are *read.table()*
 #read.csv("/home/guest/EDE_Fall2023/Data/Raw/USGS_Site02085000_Flow_Raw.csv",stringsAsFactors = TRUE)
 
 # Relative file path (friendly for users regardless of machine)
+# the "." means working directory
 USGS.flow.data <- read.csv("./Data/Raw/USGS_Site02085000_Flow_Raw.csv",stringsAsFactors = TRUE)   
 
 # What happens if we don't assign a name to our imported dataset?
 #read.csv("./Data/Raw/USGS_Site02085000_Flow_Raw.csv",stringsAsFactors = TRUE)
 
 # Another option is to choose with your browser
-# read.csv(file.choose(),stringsAsFactors = TRUE)
+#read.csv(file.choose(),stringsAsFactors = TRUE)
 
 # To import .txt files, use read.table rather than read.csv
 #read.table()
@@ -114,6 +117,7 @@ class(USGS.flow.data)
 colnames(USGS.flow.data)
 
 # Rename columns
+# assigning a vector to rename the columns, should have the same number of vectors
 colnames(USGS.flow.data) <- c("agency_cd", "site_no", "datetime", 
                               "discharge.max", "discharge.max.approval", 
                               "discharge.min", "discharge.min.approval", 
@@ -121,21 +125,26 @@ colnames(USGS.flow.data) <- c("agency_cd", "site_no", "datetime",
                               "gage.height.max", "gage.height.max.approval", 
                               "gage.height.min", "gage.height.min.approval", 
                               "gage.height.mean", "gage.height.mean.approval")
-str(USGS.flow.data)
-dim(USGS.flow.data)
-length(USGS.flow.data)
+#c() is column bind
+colnames(USGS.flow.data)
 
-head(USGS.flow.data)
+
+str(USGS.flow.data) #show objects in dataframe
+dim(USGS.flow.data) ##dimension
+length(USGS.flow.data) #number of columns
+
+head(USGS.flow.data) ####first 6 rows
 head(USGS.flow.data, 10)
 tail(USGS.flow.data, 5)
-USGS.flow.data[30000:30005, c(3, 8, 14)]
+USGS.flow.data[30000:30005, c(3, 8, 14)] ###shows only rows 3000- 30005, 
+                                          #columns 3, 8, and 14
 
 class(USGS.flow.data$datetime)
 class(USGS.flow.data$discharge.mean)
 class(USGS.flow.data$gage.height.mean)
 
 summary(USGS.flow.data)  #could point to column only with $
-
+summary(USGS.flow.data$discharge.max)
 ```
 
 What happened to blank cells in the spreadsheet when they were imported into R?
@@ -170,6 +179,8 @@ summary(USGS.flow.data.complete$discharge.mean)
 
 R will often import dates as factors or characters rather than dates. To fix, this we need to tell R that it is looking at dates. We also need to specify the format the dates are in. By default, if you don't provide a format, R will attempt to use %Y-%m-%d or %Y/%m/%d as a default. Note: if you are working collaboratively in an international setting, using a year-month-day format in spreadsheets is the least ambiguous of date formats. Make sure to check whether month-day-year or day-month-year is used in an ambiguously formatted spreadsheet.
 
+ %Y-%m-%d or %Y/%m/%d are the defaults
+ 
 Formatting of dates in R: 
 
 %d  day as number (0-31)
@@ -202,10 +213,12 @@ USGS.flow.data$datetime <- as.Date(USGS.flow.data$datetime, format = "%m/%d/%y")
 Note that for every date prior to 1969, R has assigned the date in the 2000s rather than the 1900s. This can be fixed with an `ifelse` statement inside a function. Run through the code below and write what is happening in the comment above each line.
 
 ```{r Fixing dates}
-# 
+# deleting the wrong digits and the hyphen "-" 
 USGS.flow.data$datetime <- format(USGS.flow.data$datetime, "%y%m%d")
 
-#
+#concacenating strings together, d is the input. The datetime goes from 1927 to
+#2019. bc 27 is larger than 19, when its at the beginning of a string, its gonna
+# be
 create.early.dates <- (function(d) {
        paste0(ifelse(d > 191226,"19","20"),d)
        })
