@@ -34,14 +34,31 @@ The completed exercise is due on Thursday, Sept 28th @ 5:00pm.
 #1a 
 library(tidyverse)
 library(lubridate)
+library(dplyr)
 install.packages("here")
 library(here)
+library(tidyr)
 
 #1b 
+here()
 getwd()
 #1c 
+##reading in the documents
+epa.2018o3 <- read.csv(here("Data/Raw/EPAair_O3_NC2018_raw.csv"), 
+                       stringsAsFactors = TRUE)
+epa.2019o3 <- read.csv(here("Data/Raw/EPAair_O3_NC2019_raw.csv"), 
+                       stringsAsFactors = TRUE)
+epa.2018pm2.5 <- read.csv(here("Data/Raw/EPAair_PM25_NC2018_raw.csv"), 
+                          stringsAsFactors = TRUE)
+epa.2019pm2.5 <- read.csv(here("Data/Raw/EPAair_PM25_NC2019_raw.csv"), 
+                          stringsAsFactors = TRUE)
 
 #2 
+##revealing the dimensions, column names, and structure of each dataset
+glimpse(epa.2018o3)
+glimpse(epa.2019o3)
+glimpse(epa.2018pm2.5)
+glimpse(epa.2019pm2.5)
 
 ```
 
@@ -58,13 +75,45 @@ getwd()
 
 ```{r}
 #3
+##changing format of the Date column to date objects
+epa.2018o3$Date <- as.Date(epa.2018o3$Date, format = "%m/%d/%Y")
+epa.2019o3$Date <- as.Date(epa.2019o3$Date, format = "%m/%d/%Y")
+epa.2019pm2.5$Date <- as.Date(epa.2019pm2.5$Date, format = "%m/%d/%Y")
+epa.2018pm2.5$Date <- as.Date(epa.2018pm2.5$Date, format = "%m/%d/%Y")
 
 #4
+#filtering so that the new dataframe only has 7 columns that we need 
+selected.epa.2018o3 <- select(epa.2018o3,Date, DAILY_AQI_VALUE, Site.Name, 
+                              AQS_PARAMETER_DESC, COUNTY, SITE_LATITUDE, 
+                              SITE_LONGITUDE)
+selected.epa.2019o3 <- select(epa.2019o3,Date, DAILY_AQI_VALUE, Site.Name, 
+                              AQS_PARAMETER_DESC, COUNTY, SITE_LATITUDE, 
+                              SITE_LONGITUDE)
+selected.epa.2018pm2.5 <- select(epa.2018pm2.5,Date, DAILY_AQI_VALUE, Site.Name, 
+                              AQS_PARAMETER_DESC, COUNTY, SITE_LATITUDE, 
+                              SITE_LONGITUDE)
+selected.epa.2019pm2.5 <- select(epa.2019pm2.5,Date, DAILY_AQI_VALUE, Site.Name, 
+                              AQS_PARAMETER_DESC, COUNTY, SITE_LATITUDE, 
+                              SITE_LONGITUDE)
+
+
 
 #5
+selected.epa.2018pm2.5 <- mutate(selected.epa.2018pm2.5, 
+                                 AQS_PARAMETER_DESC = "PM2.5")
+selected.epa.2019pm2.5 <- mutate(selected.epa.2019pm2.5, 
+                                 AQS_PARAMETER_DESC = "PM2.5")
 
 #6
-
+##saving the different documents to the processed folder
+write.csv(selected.epa.2018o3, row.names = FALSE, file = 
+            here("Data/Processed/EPAair_O3_NC2018_processed.csv"))
+write.csv(selected.epa.2019o3, row.names = FALSE, file = 
+            here("Data/Processed/EPAair_O3_NC2019_processed.csv"))
+write.csv(selected.epa.2018pm2.5, row.names = FALSE, file = 
+            here("Data/Processed/EPAair_PM25_NC2018_processed.csv"))
+write.csv(selected.epa.2019pm2.5, row.names = FALSE, file = 
+            here("Data/Processed/EPAair_PM25_NC2019_processed.csv"))
 ```
 
 
@@ -90,14 +139,70 @@ getwd()
 
 ```{r}
 #7 
-
+modified.epa.2018o3 <- read.csv(here("Data/Processed/EPAair_O3_NC2018_processed.csv"), stringsAsFactors = TRUE)
+modified.epa.2019o3 <- read.csv(here("Data/Processed/EPAair_O3_NC2019_processed.csv"), stringsAsFactors = TRUE)
+modified.epa.2018pm2.5 <- read.csv(here("Data/Processed/EPAair_PM25_NC2018_processed.csv"), stringsAsFactors = TRUE)
+modified.epa.2019pm2.5 <- read.csv(here("Data/Processed/EPAair_PM25_NC2019_processed.csv"), stringsAsFactors = TRUE)
+##checking if the colnames are the same
+colnames(modified.epa.2018o3) == colnames(modified.epa.2019o3) 
+colnames(modified.epa.2018pm2.5)== colnames(modified.epa.2019pm2.5)
+colnames(modified.epa.2018pm2.5)== colnames(modified.epa.2019o3)
+#?rbind
+combined_201819_o3pm2.5 <- rbind(modified.epa.2018o3, modified.epa.2019o3,
+                                 modified.epa.2018pm2.5, modified.epa.2019pm2.5)
+combined_201819_o3pm2.5
 #8 
+###filter out any sites that are not "Linville Falls", "Durham Armory", 
+# "Leggett", "Hattie Avenue", "Clemmons Middle", "Mendenhall School", 
+# "Frying Pan Mountain", "West Johnston Co.", "Garinger High School", 
+# "Castle Hayne", "Pitt Agri. Center", "Bryson City", "Millbrook School" 
+###Using the split-apply-combine strategy to generate daily means: 
+# group by date, site name, AQS parameter, and county. Take the mean of the 
+# AQI value, latitude, and longitude.
+##* Add columns for "Month" and "Year" by parsing your "Date" column
+  
+
+
+new_combined_201819_o3pm2.5 <- 
+  combined_201819_o3pm2.5 %>%
+  filter(Site.Name %in% c("Linville Falls", "Durham Armory", "Leggett", 
+                        "Hattie Avenue", "Clemmons Middle", "Mendenhall School",
+                        "Frying Pan Mountain", "West Johnston Co.", 
+                        "Garinger High School", "Castle Hayne",
+                        "Pitt Agri. Center", "Bryson City", 
+                        "Millbrook School"))  %>%
+ group_by(Date, Site.Name, AQS_PARAMETER_DESC, COUNTY) %>%
+  summarise(meanAQI = mean(DAILY_AQI_VALUE), 
+             meanlat = mean(SITE_LATITUDE), 
+            meanlong = mean(SITE_LONGITUDE),
+            .groups = 'drop') %>%
+  mutate(Month = month(Date), Year = year(Date))
+
+dim(new_combined_201819_o3pm2.5)
+
 
 #9
+# Spreading the datasets such that AQI values for ozone and 
+# PM2.5 are in separate columns using pivot_wider
+new_combined_201819_o3pm2.5.spread2 <- pivot_wider(new_combined_201819_o3pm2.5, 
+                        names_from = AQS_PARAMETER_DESC, values_from = meanAQI)
 
+duplicate_rows <- new_combined_201819_o3pm2.5.spread2[duplicated
+                (new_combined_201819_o3pm2.5.spread2[c('Date', 'Site.Name')]) |
+        duplicated(new_combined_201819_o3pm2.5.spread2[c('Date', 'Site.Name')], 
+         fromLast = TRUE), ]
+dim(duplicate_rows)
+######works cited: chatGPT 
+######prompt: use the unique function to see if there are rows with the same 
+######"Date and Site.Name" values in r
+###### the prompt is wrong but chatgpt was able to recognize that and use 
+####### another method
 #10
-
-#11
+#### checking the dimension of the new dataset
+dim(new_combined_201819_o3pm2.5.spread2)
+#11 ###savign the new dataset
+write.csv(new_combined_201819_o3pm2.5.spread2, row.names = FALSE, file = 
+            here("Data/Processed/EPAair_O3_PM25_NC1819_Processed.csv"))
 
 ```
 
@@ -110,14 +215,39 @@ getwd()
 
 ```{r}
 
-#12
 
+#12
+##this code groups teh data by site, month, and year,
+##generates the mean aqi values for ozone and pm2.5 respectively,
+## and removes where the mean ozone values are not available
+new_combined_201819_o3pm2.5.spread2_summary <- 
+  new_combined_201819_o3pm2.5.spread2 %>%
+  group_by(Site.Name, Month, Year) %>%
+  summarise(meanAQI_Ozone = mean(Ozone),
+            meanAQI_pm2.5 = mean (PM2.5),
+            .groups = 'drop') %>%
+  drop_na(meanAQI_Ozone) 
+
+
+#colnames(new_combined_201819_o3pm2.5.spread2)
+# colnames(new_combined_201819_o3pm2.5.spread2_summary)
+   
 
 #13
-
+##dimensions of the new dataframe
+dim(new_combined_201819_o3pm2.5.spread2_summary)
+##saves the new dataframe
+write.csv(new_combined_201819_o3pm2.5.spread2_summary, row.names = FALSE, file = 
+            here("Data/Processed/EPAair_O3_PM25_NC1819_Summary_Processed.csv"))
 
 ```
 
 14. Why did we use the function `drop_na` rather than `na.omit`?
 
 > Answer: 
+The two are very similar with different syntaxes. The syntax for na.omit
+is a lot more complicated because it automatically deletes all instances with
+nas in a dataframe. As a result, there needs to be a lot of workaround in order 
+for it to work. na.omit also doesnt take in an argument for a specific row.
+Additionally, drop_na is also in the dplyr package, which would be easier to 
+follow.
