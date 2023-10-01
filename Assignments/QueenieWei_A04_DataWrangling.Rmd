@@ -150,7 +150,7 @@ colnames(modified.epa.2018pm2.5)== colnames(modified.epa.2019o3)
 #?rbind
 combined_201819_o3pm2.5 <- rbind(modified.epa.2018o3, modified.epa.2019o3,
                                  modified.epa.2018pm2.5, modified.epa.2019pm2.5)
-combined_201819_o3pm2.5
+
 #8 
 ###filter out any sites that are not "Linville Falls", "Durham Armory", 
 # "Leggett", "Hattie Avenue", "Clemmons Middle", "Mendenhall School", 
