@@ -1,6 +1,6 @@
 ---
 title: "Assignment 5: Data Visualization"
-author: "Student Name"
+author: "Queenie Wei"
 date: "Fall 2023"
 output: pdf_document
 geometry: margin=2.54cm
@@ -32,9 +32,28 @@ This exercise accompanies the lessons in Environmental Data Analytics on Data Vi
 
 ```{r initialize project}
 #1 
+#reading in all the necessary packages, making sure the wd is right, and reading in the csvs
+library(lubridate)
+library(tidyverse)
+library(here)
+library(cowplot)
+getwd()
+here()
+LTER_PerterPaul <- read.csv(here("Data/Processed_KEY/Processed_KEY
+                                 /NTL-LTER_Lake_Chemistry_Nutrients_PeterPaul_Processed.csv"), 
+                       stringsAsFactors = TRUE)
+Litter_trap <- read.csv(here("Data/Processed_KEY/Processed_KEY
+                             /NEON_NIWO_Litter_mass_trap_Processed.csv"), 
+                       stringsAsFactors = TRUE)
 
 #2 
-
+class(LTER_PerterPaul$sampledate)
+class(Litter_trap$collectDate)
+#setting the dates to the date format
+LTER_PerterPaul$sampledate <- as.Date(LTER_PerterPaul$sampledate, 
+                                      format = "%Y-%y-%d")
+Litter_trap$collectDate <- as.Date(Litter_trap$collectDate, 
+                                   format = "%Y-%y-%d")
 ```
 ## Define your theme
 3. Build a theme and set it as your default theme. Customize the look of at least two of the following: 
@@ -46,7 +65,13 @@ This exercise accompanies the lessons in Environmental Data Analytics on Data Vi
 
 ```{r build plot theme}
 #3
-
+fudge <- theme_bw(base_size = 15) +
+  theme(axis.text = element_text(color = "pink3"),
+        plot.background = element_rect(fill = "lightgray"),
+        axis.text.y = element_text(color = "blue4"),
+        axis.text.x = element_text(color = "blue4"),
+        axis.title = element_text(color = "darkred"),
+        legend.position = "bottom")
 ```
 
 ## Create graphs
@@ -57,6 +82,15 @@ For numbers 4-7, create ggplot graphs and adjust aesthetics to follow best pract
 ```{r plot total P vs PO4}
 #4 
 
+NTL_LTER_Adjusted <- 
+  ggplot(LTER_PerterPaul, aes(x = po4, y = tp_ug)) +
+  geom_point(aes(color = lakename)) +
+  geom_smooth(method = lm, color = "black") +
+  ylab("Total Phosphorus") +
+  xlab("Phosphate") +
+  xlim(0, 20) +
+  ylim(0, 75)
+print(NTL_LTER_Adjusted)
 ```
 
 
@@ -68,12 +102,88 @@ Tip:
 
 ```{r Create boxplots}
 #5 
+install.packages("gridExtra")
+install.packages("gridGraphics")
+install.packages("ggpubr")
+library(ggpubr)
+library(gridGraphics)
+library(gridExtra)
+# month.abb[mth]
+# temp <- 
+#   ggplot(LTER_PerterPaul, aes(x = month.abb[mth], y = temperature_C)) + 
+#   geom_boxplot(aes(color = lakename)) +
+#   theme(legend.position = "none")
+# print(temp)
+# 
+# TP <- 
+#   ggplot(LTER_PerterPaul, aes(x = month.abb[mth], y = tp_ug)) + 
+#   geom_boxplot(aes(color = lakename)) +
+#   theme(legend.position = "none")
+# 
+# print(TP) 
+#            
+# TN <-
+#   ggplot(LTER_PerterPaul, aes(x = month.abb[mth], y = tn_ug)) + 
+#   geom_boxplot(aes(color = lakename)) 
+# 
+# plot_grid(temp,TP, TN, nrow = 1, align = 'h')
+##original code
 
+
+mth <- LTER_PerterPaul$month
+##
+month_order <- rev(month.abb)
+
+# Create the temp plot
+temp <- ggplot(LTER_PerterPaul, aes(x = factor(month.abb[mth], 
+                                               levels = rev(month_order)), 
+                                    y = temperature_C)) + 
+    xlab("Month") +
+  geom_boxplot(aes(color = lakename)) +
+ guides(color = "none")
+# Create the TP plot
+TP <- ggplot(LTER_PerterPaul, aes(x = factor(month.abb[mth], 
+                                             levels = rev(month_order)), 
+                                  y = tp_ug)) + 
+  geom_boxplot(aes(color = lakename)) +
+  xlab("Month") +
+ guides(color = "none")
+
+
+# Create the TN plot
+TN <- ggplot(LTER_PerterPaul, aes(x = factor(month.abb[mth], 
+                                             levels = rev(month_order)), 
+                                  y = tn_ug)) + 
+    xlab("Month") +
+  geom_boxplot(aes(color = lakename)) 
+
+final_plot <- ggpubr::ggarrange(temp, TP, TN,
+                  common.legend = TRUE,
+                  legend = "right",
+                  align = "hv",
+                  nrow = 1)
+
+
+
+# Display the final_plot_with_legend
+final_plot
+#######
+####works cited: ChatGPT
+###promt: I fed it my original code and used the prompt "arrange the x axis so 
+#that they are in the order of months".
+### the code it gave me got rid of all of the legends, so I had to 
+#manually delete one of the "theme(legend.position = "none")"
+###the original answer Chatgpt gave me also had the months in a reverse order, 
+#so I had to tell it to reverse the months
 ```
 
 Question: What do you observe about the variables of interest over seasons and between lakes? 
 
+
 > Answer: 
+Temperature tends to peak around July and August (the summer), and gets pretty low in the winter. 
+Phosphorous demonstrates different trends in the two lakes. in Paul Lake, there seems to be a decline from May to August, following by an increase in September. For Peter Lake, it tends to increase from May to September.
+Phosphate: there isnt a general trend for Paul lake, except for an increase in September. For Peter Lake, there is a positive trend from May to August, fowlling by a decline in September.
 
 6. [Niwot Ridge] Plot a subset of the litter dataset by displaying only the "Needles" functional group. Plot the dry mass of needle litter by date and separate by NLCD class with a color aesthetic. (no need to adjust the name of each land use)
 
@@ -82,11 +192,54 @@ Question: What do you observe about the variables of interest over seasons and b
 ```{r Plot litter}
 #6
 
+####creates a subset of the litter dataset with only the needles functional group. This plots the dry mass against the colelct date and separates them by color differentiating between different nlcdclasses
 
+library(ggplot2)
+
+# Create the boxplot
+library(ggplot2)
+
+# Create the boxplot
+boxplot_plot <- ggplot(subset(Litter_trap, functionalGroup == "Needles"), 
+                       aes(x = collectDate, y = dryMass, color = nlcdClass)) +
+  geom_point() +
+  xlab("Collect Date") +
+  ylab("Dry Mass") + 
+  ylim(0, 40) +
+  scale_color_brewer(palette = "Set2")
+
+boxplot_plot
 #7
+boxplot_plot2 <- ggplot(subset(Litter_trap, functionalGroup == "Needles"), 
+                       aes(x = collectDate, y = dryMass)) +
+  geom_point() +
+  xlab("Collect Date") +
+  ylab("Dry Mass") + 
+  ylim(0, 40) +
+  facet_wrap(vars(nlcdClass), nrow = 1) 
 
+boxplot_plot2
+
+######additional fun stuff im trying out
+
+boxplot_plot3 <- ggplot(Litter_trap, 
+                        aes(x = factor(year(collectDate)), y = dryMass, 
+                            color = nlcdClass)) +
+  geom_boxplot(outlier.shape = NA) +  # Remove outlier points from the boxplots
+  geom_jitter(position = position_jitter(width = 0.2), alpha = 0.2, size = 1) +  # Add individual observations as jittered points
+  xlab("Collect Year") +
+  ylab("Dry Mass") +
+  ylim(0, 8.5) + 
+  facet_wrap(~nlcdClass, nrow = 1)
+
+# Print the plot
+print(boxplot_plot3)
+#####Works cited:chatgpt
+#### I fed it my code from #7 and used the prompt "instead of this, create boxplots for each nlcdclass at each year, and use the jitter function to add observations onto the plot"
+#### this graph could also use some colors :) and then I added color = nlcdClass to make it prettier
 
 ```
 Question: Which of these plots (6 vs. 7) do you think is more effective, and why? 
 
 > Answer:
+I believe plot 7 is more effective at communicating how the distribution of dry mass differs among the three facetwrap groups since the different points are seperated by groups. However, I would appreciate it if the different groups have different colors, and having a boxplot would also be nice too. (like the one I did in the end)

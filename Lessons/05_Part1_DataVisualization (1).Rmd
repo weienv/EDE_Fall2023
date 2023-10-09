@@ -112,7 +112,7 @@ PMplot.faceted2 <-
   ggplot(subset(EPAair, Site.Name == "Clemmons Middle" | Site.Name == "Leggett" |
                   Site.Name == "Bryson City"), ###only include those three sites
          aes(x = Month, y = PM2.5)) + 
-  geom_point() +
+  geom_point() 
   facet_grid(Site.Name ~ Year) ###column: year, rows:site name
 print(PMplot.faceted2)
 
