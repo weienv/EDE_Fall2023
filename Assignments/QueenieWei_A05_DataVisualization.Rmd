@@ -39,11 +39,9 @@ library(here)
 library(cowplot)
 getwd()
 here()
-LTER_PerterPaul <- read.csv(here("Data/Processed_KEY/Processed_KEY
-                                 /NTL-LTER_Lake_Chemistry_Nutrients_PeterPaul_Processed.csv"), 
+LTER_PerterPaul <- read.csv(here("Data/Processed_KEY/Processed_KEY/NTL-LTER_Lake_Chemistry_Nutrients_PeterPaul_Processed.csv"), 
                        stringsAsFactors = TRUE)
-Litter_trap <- read.csv(here("Data/Processed_KEY/Processed_KEY
-                             /NEON_NIWO_Litter_mass_trap_Processed.csv"), 
+Litter_trap <- read.csv(here("Data/Processed_KEY/Processed_KEY/NEON_NIWO_Litter_mass_trap_Processed.csv"), 
                        stringsAsFactors = TRUE)
 
 #2 
