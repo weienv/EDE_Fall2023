@@ -100,9 +100,7 @@ Tip:
 
 ```{r Create boxplots}
 #5 
-install.packages("gridExtra")
-install.packages("gridGraphics")
-install.packages("ggpubr")
+
 library(ggpubr)
 library(gridGraphics)
 library(gridExtra)
@@ -138,14 +136,16 @@ temp <- ggplot(LTER_PerterPaul, aes(x = factor(month.abb[mth],
                                     y = temperature_C)) + 
     xlab("Month") +
   geom_boxplot(aes(color = lakename)) +
- guides(color = "none")
+ guides(color = "none")+
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
 # Create the TP plot
 TP <- ggplot(LTER_PerterPaul, aes(x = factor(month.abb[mth], 
                                              levels = rev(month_order)), 
                                   y = tp_ug)) + 
   geom_boxplot(aes(color = lakename)) +
   xlab("Month") +
- guides(color = "none")
+ guides(color = "none")+
+theme(axis.text.x = element_text(angle = 90, hjust = 1))
 
 
 # Create the TN plot
@@ -153,7 +153,8 @@ TN <- ggplot(LTER_PerterPaul, aes(x = factor(month.abb[mth],
                                              levels = rev(month_order)), 
                                   y = tn_ug)) + 
     xlab("Month") +
-  geom_boxplot(aes(color = lakename)) 
+  geom_boxplot(aes(color = lakename)) +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
 
 final_plot <- ggpubr::ggarrange(temp, TP, TN,
                   common.legend = TRUE,
@@ -228,6 +229,7 @@ boxplot_plot3 <- ggplot(Litter_trap,
   xlab("Collect Year") +
   ylab("Dry Mass") +
   ylim(0, 8.5) + 
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
   facet_wrap(~nlcdClass, nrow = 1)
 
 # Print the plot
