@@ -235,7 +235,21 @@ new_combined_201819_o3pm2.5.spread2_summary <-
 
 #13
 ##dimensions of the new dataframe
+new_combined_201819_o3pm2.5.spread2_summary <- 
+  new_combined_201819_o3pm2.5.spread2 %>%
+  group_by(Site.Name, Month, Year) %>%
+  summarise(meanAQI_Ozone = mean(Ozone),
+            meanAQI_pm2.5 = mean (PM2.5),
+            .groups = 'drop') %>%
+  drop_na(meanAQI_Ozone) 
+##########
+new_combined_201819_o3pm2.5.spread2_summary_2 <- 
+  new_combined_201819_o3pm2.5.spread2 %>%
+  group_by(Site.Name, Month, Year) %>%
+  drop_na(Ozone) 
+dim(new_combined_201819_o3pm2.5.spread2_summary_2)
 dim(new_combined_201819_o3pm2.5.spread2_summary)
+#############
 ##saves the new dataframe
 write.csv(new_combined_201819_o3pm2.5.spread2_summary, row.names = FALSE, file = 
             here("Data/Processed/EPAair_O3_PM25_NC1819_Summary_Processed.csv"))
