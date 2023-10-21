@@ -13,13 +13,13 @@ toc: true
 ## Set up the coding environment
 
 ```{r setup, warning=FALSE, echo=FALSE, include = FALSE}
-
+###just want to run the code and not show the code: include = FALSE
 #Load packages
 library(tidyverse);library(here);library(lubridate)
 
 #Load data
 nutrient_data_raw <- read.csv(
-  here('Data/Processed_KEY','NTL-LTER_Lake_Nutrients_PeterPaul_Processed.csv'),
+  here('Data/Processed_KEY/Processed_KEY','NTL-LTER_Lake_Nutrients_PeterPaul_Processed.csv'),
   stringsAsFactors = TRUE)
 
 #Fix dates
@@ -28,7 +28,7 @@ nutrient_data_raw$sampledate = ymd(nutrient_data_raw$sampledate)
 ```
 
 The raw dataset has `r nrow(nutrient_data_raw)` rows and `r ncol(nutrient_data_raw)` columns.
-
+r nrow(nutrient_data_raw) is lil code chunks within the 
 ## Wrangle the data
 
 ```{r wrangle}
@@ -54,8 +54,10 @@ nutrient_data_tn <- nutrient_data %>%
 ## Report the summary
 
 ```{r create tables, echo=FALSE}
+##create tables is the name of the code chunk
+###kable makes the tables more professional
 knitr::kable(nutrient_data_tn,caption = "Summary of Total Nitrogen")
-
+##caption is the name of the table
 knitr::kable(nutrient_data_tn,caption = "Another summary of Total Nitrogen")
 
 
