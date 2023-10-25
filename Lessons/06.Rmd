@@ -1,9 +1,9 @@
 ---
 output: html_document
-runtime: shiny
 title: "6 - Part 2: Interactive R Markdown"
 author: Environmental Data Analytics | John Fay & Luana Lima
 date: "Fall 2023"
+runtime: shiny
 ---
 
 ## Overview

@@ -19,10 +19,10 @@ Effective data visualization depends on purposeful choices about graph types. Th
 ## Set Up
 
 ```{r, message = FALSE, warning = FALSE}
+chooseCRANmirror(ind = 1)
 library(tidyverse);library(lubridate);library(here)
 install.packages("ggridges")
 library(ggridges)
-
 here()
 
 PeterPaul.chem.nutrients <- 

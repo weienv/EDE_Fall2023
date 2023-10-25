@@ -1,8 +1,8 @@
 ---
 title: 'A06 - Crafting Reports'
-author: "Student Name" 
+author: "Queenie Wei" 
 date: "Fall 2023"
-output: pdf_document
+output: hdml_document
 ---
 
 ## Objectives:
